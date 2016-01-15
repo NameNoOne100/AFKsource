@@ -13,12 +13,14 @@ use pocketmine\Server;
 use pocketmine\Player;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\Cancellable;
 use pocketmine\level\Position;
 use pocketmine\level\Level;
 use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
 use pocketmine\event\player\PlayerGameModeChangeEvent;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 
 
 
@@ -37,6 +39,7 @@ class main extends PluginBase{
                     $sender->sendMessage(Color::GREEN."[AFK plugin] You are now AFK!");
                     $sender->setHealth(20);
                     $sender->getEffect(10);
+                    $this->god = true;
 
                     return;
                 }else{
@@ -48,5 +51,11 @@ class main extends PluginBase{
             $sender->sendMessage(Color::RED."That command can only be run in console!");
             return;
         }
+    }
+
+    public function entityDamage(EntityDamageEvent $event) {
+      if($this->god == true) {
+        $event->setCancelled(true);
+      }
     }
 }
